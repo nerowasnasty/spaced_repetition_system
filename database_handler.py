@@ -14,11 +14,31 @@ def open_con(database_name):
 	return [con, cur]
 
 
+def create_values_command(table_values):
+	table_values_command = ""
+
+	for key in table_values:
+		if (table_values_command):
+			table_values_command = f"{table_values_command}, {key} {table_values[key]}"
+
+		else:
+			table_values_command = f"{key} {table_values[key]}"
+
+	return table_values_command
+
+
+def create_table(con, cur, table_name, table_values):
+	cur.execute(f"""CREATE TABLE IF NOT EXISTS {table_name} ({table_values})""")
+	con.commit()
+	con.close()
+
+
 """ MAIN """
 
 
 def main():
-	open_con("nero_was_nasty")
+	[con, cur] = open_con("nero_was_nasty")
+	create_table(con, cur, "nerowasnasty", create_values_command({"name": "text", "age": "INTEGER", "money": "REAL", "picture": "BLOB"}))
 
 
 
