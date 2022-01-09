@@ -3,5 +3,5 @@ A spaced repetition system written in Python for language learning
 
 ## This Code Require the Following Python Modules ##
 ```
-Pillow, Pygame
+Pillow, Pygame, SQLite3
 ```
