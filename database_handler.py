@@ -14,7 +14,7 @@ def open_con(database_name):
 	return [con, cur]
 
 
-def create_values_command(table_values):
+def create_table_creation_values_command(table_values):
 	table_values_command = ""
 
 	for key in table_values:
@@ -23,6 +23,32 @@ def create_values_command(table_values):
 
 		else:
 			table_values_command = f"{key} {table_values[key]}"
+
+	return table_values_command
+
+
+def create_columns_command(table_values):
+	columns_command = ""
+
+	for key in table_values:
+		if (columns_command):
+			columns_command = f"{columns_command}, {key}"
+
+		else:
+			columns_command = f"{key}"
+
+	return columns_command
+
+
+def create_values_command(table_values):
+	table_values_command = ""
+
+	for key in table_values:
+		if (table_values_command):
+			table_values_command = f"{table_values_command}, ?"
+
+		else:
+			table_values_command = f"?"
 
 	return table_values_command
 
@@ -40,14 +66,23 @@ def convert_file_to_blob(file):
 		return blob_data
 
 
+def insert_into_database(con, cur, table_name, columns, table_values_command, table_values):
+	cur.execute(f"""INSERT INTO {table_name}({columns}) VALUES ({table_values_command})""", table_values)
+	con.commit()
+	con.close()
+
+
 """ MAIN """
 
 
 def main():
 	[con, cur] = open_con("nero_was_nasty")
-	create_table(con, cur, "nerowasnasty", create_values_command({"name": "text", "age": "INTEGER", "money": "REAL", "picture": "BLOB"}))
+	create_table(con, cur, "nerowasnasty", create_table_creation_values_command({"name": "text", "age": "INTEGER", "money": "REAL", "picture": "BLOB"}))
 	print(convert_file_to_blob("C:\\Users\\nero\\projects\\quer_voar_industry_baby.mp3"))
-
+	print(create_table_creation_values_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}))
+	print(create_columns_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}))
+	[con, cur] = open_con("nero_was_nasty")
+	insert_into_database(con, cur, "nerowasnasty", create_columns_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), create_values_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), ["nero", 19, 1305805.35, convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")])
 
 
 """ runs main if it's not imported """
