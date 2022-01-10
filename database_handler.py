@@ -33,12 +33,20 @@ def create_table(con, cur, table_name, table_values):
 	con.close()
 
 
+def convert_file_to_blob(file):
+	with open(file, "rb") as file:
+		blob_data = file.read()
+
+		return blob_data
+
+
 """ MAIN """
 
 
 def main():
 	[con, cur] = open_con("nero_was_nasty")
 	create_table(con, cur, "nerowasnasty", create_values_command({"name": "text", "age": "INTEGER", "money": "REAL", "picture": "BLOB"}))
+	print(convert_file_to_blob("C:\\Users\\nero\\projects\\quer_voar_industry_baby.mp3"))
 
 
 
