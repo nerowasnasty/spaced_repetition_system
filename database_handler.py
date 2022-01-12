@@ -101,6 +101,11 @@ def show_results(results):
 		print(result)
 
 
+def delete_by_fields(con, cur, table_name, fields_command, fields):
+	cur.execute(f"""DELETE FROM {table_name} WHERE {fields_command}""", list(fields.values()))
+	con.commit()
+	con.close()
+
 
 """ MAIN """
 
@@ -111,12 +116,15 @@ def main():
 	#print(convert_file_to_blob("C:\\Users\\nero\\projects\\quer_voar_industry_baby.mp3"))
 	#print(create_table_creation_values_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}))
 	#print(create_columns_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}))
-	#[con, cur] = open_con("nero_was_nasty")
-	#insert_into_database(con, cur, "nerowasnasty", create_columns_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), create_values_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), ["nero", 19, 1305805.35, convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")])
+	[con, cur] = open_con("nero_was_nasty")
+	insert_into_database(con, cur, "nerowasnasty", create_columns_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), create_values_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), ["nero", 19, 1305805.35, convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")])
 	[con, cur] = open_con("nero_was_nasty")
 	#print(create_fields_command({"name": "nero", "age": 19}))
 	show_results(search_by_fields(con, cur, "nerowasnasty", create_fields_command({"name": "nero", "age": 19}), {"name": "nero", "age": 19}))
-
+	[con, cur] = open_con("nero_was_nasty")
+	delete_by_fields(con, cur, "nerowasnasty", create_fields_command({"name": "nero", "age": 19}), {"name": "nero", "age": 19})
+	[con, cur] = open_con("nero_was_nasty")
+	show_results(search_by_fields(con, cur, "nerowasnasty", create_fields_command({"name": "nero", "age": 19}), {"name": "nero", "age": 19}))
 
 """ runs main if it's not imported """
 
