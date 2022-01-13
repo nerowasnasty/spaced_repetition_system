@@ -85,6 +85,16 @@ def create_fields_command(fields):
 	return fields_command
 
 
+def show_table(con, cur, table_name):
+	cur.execute(f"""SELECT * FROM {table_name}""");
+	results = cur.fetchall()
+
+	con.commit()
+	con.close()
+
+	return results
+
+
 def search_by_fields(con, cur, table_name, fields_command, fields):
 	cur.execute(f"""SELECT * FROM {table_name} WHERE {fields_command}""", list(fields.values()))
 
@@ -107,24 +117,42 @@ def delete_by_fields(con, cur, table_name, fields_command, fields):
 	con.close()
 
 
+def create_fields_update_command(fields):
+	fields_command = ""
+
+	for key in fields.keys():
+		if (fields_command):
+			fields_command = f"{fields_command}, {key} = ?"
+
+		else:
+			fields_command = f"{key} = ?"
+
+	return fields_command
+
+
+def update_by_fields(con, cur, table_name, fields_update_command, fields_command, update_fields, fields):
+	cur.execute(f"""UPDATE  {table_name} SET {fields_update_command}  WHERE {fields_command}""", [*list(update_fields.values()), *list(fields.values())])
+	con.commit()
+	con.close()
+
+
 """ MAIN """
 
 
 def main():
 	[con, cur] = open_con("nero_was_nasty")
-	#create_table(con, cur, "nerowasnasty", create_table_creation_values_command({"name": "text", "age": "INTEGER", "money": "REAL", "picture": "BLOB"}))
-	#print(convert_file_to_blob("C:\\Users\\nero\\projects\\quer_voar_industry_baby.mp3"))
-	#print(create_table_creation_values_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}))
-	#print(create_columns_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}))
+	create_table(con, cur, "nerowasnasty", create_table_creation_values_command({"name": "text", "age": "INTEGER", "money": "REAL", "picture": "BLOB"}))
 	[con, cur] = open_con("nero_was_nasty")
 	insert_into_database(con, cur, "nerowasnasty", create_columns_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), create_values_command({"name": "nero", "age": 19, "money": 1305805.35, "picture": convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")}), ["nero", 19, 1305805.35, convert_file_to_blob("C:\\Users\\nero\\projects\\image.jpg")])
 	[con, cur] = open_con("nero_was_nasty")
-	#print(create_fields_command({"name": "nero", "age": 19}))
-	show_results(search_by_fields(con, cur, "nerowasnasty", create_fields_command({"name": "nero", "age": 19}), {"name": "nero", "age": 19}))
+	show_results(show_table(con, cur, "nerowasnasty"))
+	#[con, cur] = open_con("nero_was_nasty")
+	#delete_by_fields(con, cur, "nerowasnasty", create_fields_command({"name": "nero", "age": 19}), {"name": "nero", "age": 19})
 	[con, cur] = open_con("nero_was_nasty")
-	delete_by_fields(con, cur, "nerowasnasty", create_fields_command({"name": "nero", "age": 19}), {"name": "nero", "age": 19})
+	update_by_fields(con, cur, "nerowasnasty", create_fields_update_command({"name": "dclxvi", "age": 21}), create_fields_command({"name": "nero", "age": 19}), {"name": "dclxvi", "age": 21}, {"name": "nero", "age": 19})
 	[con, cur] = open_con("nero_was_nasty")
-	show_results(search_by_fields(con, cur, "nerowasnasty", create_fields_command({"name": "nero", "age": 19}), {"name": "nero", "age": 19}))
+	show_results(show_table(con, cur, "nerowasnasty"))
+
 
 """ runs main if it's not imported """
 
