@@ -1,27 +1,45 @@
 """ FUNCTIONS """
 
 
+def print_menu_option(option_number, option_text):
+	""" prints "[n] option_text", where n is the option number and option_text is the option to be choose"""
+	print(f'  [{option_number}] {option_text}')
+
+
 def generate_menu(menu_name, options_array):
-	print(f'{menu_name}:')
+	""" prints menu name, options with numbers and exit option"""
 
-	for i in range(len(options_array)):
-		print(f'  [{i}] {options_array[i]}')
+	try:
+		print(f'{menu_name}:') # menu name:
 
-	print(f'  [{len(options_array) + 1}] exit')
+		# var declaration
+		last_option = len(options_array)
 
-	return input(f'choose an option[{len(options_array) + 1}]: ')
+		# loops through all optoins printing them
+		for option_number in range(last_option):
+			print_menu_option(option_number, options_array[option_number]) # [n] option text (e.g. "[1] save changes to database")
+
+		# print exit option
+		print_menu_option(last_option, "exit")
+
+		# if everything is fine, returns true
+		return True
+
+	except:
+		# if there's any mistake, returns false
+		return False
 
 
 def input_options(options_array, user_input):
-		try:
-			if (int(user_input) <= len(options_array) + 1):
-				return True
+	try:
+		if (int(user_input) <= len(options_array)):
+			return True
 
-			else:
-				return False
+		else:
+			return False
 
-		except:
-				return False
+	except:
+			return False
 
 
 """ MAIN FUNCTION """
